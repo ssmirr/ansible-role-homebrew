@@ -1,0 +1,40 @@
+---
+- name: install the 'Development tools' package group
+  yum:
+    name: "@Development tools"
+    state: present 
+  become: yes
+
+- name: Install Linuxbrew prerequisites for Red Hat or CentOS
+  yum:
+    update_cache: yes
+    pkg: "{{ item }}"
+    state: installed
+  with_items:
+    - curl 
+    - file 
+    - git 
+    - python-setuptools
+  become: yes
+
+- name: Install linuxbrew with git
+  become: no
+  git: 
+    repo: https://github.com/Linuxbrew/brew.git 
+    dest: ~/.linuxbrew
+    clone: yes
+    depth: 1
+    accept_hostkey: yes
+    update: no
+
+- name: Update environment variables
+  become: yes
+  lineinfile: >
+    dest="/etc/environment"
+    line="{{ item }}"
+    create=yes
+    state=present
+  with_items:
+    - PATH="$HOME/.linuxbrew/bin:$PATH"
+    - export MANPATH="$(brew --prefix)/share/man:$MANPATH"
+    - export INFOPATH="$(brew --prefix)/share/info:$INFOPATH"
