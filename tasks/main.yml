@@ -35,4 +35,5 @@
   become: yes
 
 - name: Force update brew after installation.
+  become: no
   command: "/usr/local/bin/brew update --force"
