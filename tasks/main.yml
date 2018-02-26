@@ -27,18 +27,12 @@
     accept_hostkey: yes
     update: no
 
-- name: Update environment variables
+- name: Symlink brew to homebrew_brew_bin_path.
+  file:
+    src: "~/.linuxbrew/bin/brew"
+    dest: "/usr/local/bin/brew"
+    state: link
   become: yes
-  lineinfile: >
-    dest="/etc/environment"
-    line="{{ item }}"
-    create=yes
-    state=present
-  with_items:
-    - PATH="$HOME/.linuxbrew/bin:$PATH"
-    - export MANPATH="$(brew --prefix)/share/man:$MANPATH"
-    - export INFOPATH="$(brew --prefix)/share/info:$INFOPATH"
 
-- name: source environment
-  sudo: no   
-  shell: . /etc/environment
+- name: Force update brew after installation.
+  command: "/usr/local/bin/brew update --force"
