@@ -29,7 +29,7 @@
 
 - name: Symlink brew to homebrew_brew_bin_path.
   file:
-    src: "~/.linuxbrew/bin/brew"
+    src: "/home/{{ansible_user}}/.linuxbrew/bin/brew"
     dest: "/usr/local/bin/brew"
     state: link
   become: yes
